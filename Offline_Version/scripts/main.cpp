@@ -1,15 +1,5 @@
 #include "bits/stdc++.h"
 using namespace std;
-#define fi first
-#define se second
-#define ll long long
-#define dbg(v) cerr<<#v<<" = "<<v<<'\n'
-#define vl vector <ll>
-#define pii pair<int,int>
-#define vii vector < pii >
-#define mp make_pair
-#define db long double
-#define pb push_back
 #define all(s) s.begin(),s.end()
 template < class P , class Q > ostream& operator<<(ostream& stream, pair < P , Q > v){ stream << "(" << v.fi << ',' << v.se << ")"; return stream;}
 template < class T > ostream& operator<<(ostream& stream, const vector<T> v){ stream << "[ "; for (int i=0; i<(int)v.size(); i++) stream << v[i] << " "; stream << "]"; return stream;}
@@ -48,17 +38,9 @@ int main(void) {
 			for (int j = 1;j <= n;++j)
 				if (!Path[i][k].empty() && !Path[k][j].empty() // (i,k) and (k,j) are valid paths
 						&&	((i != j && Path[i][j].empty()) //(i,j) does not have a path in between them
-					 	||   Path[i][j].size() > Path[i][k].size() + Path[k][j].size())) /*or the path from (i,j) is
+					 	||  Path[i][j].size() > Path[i][k].size() + Path[k][j].size())) /*or the path from (i,j) is
 											is bigger than the path from (i,k) plus path from path (k,j)*/
 					Path[i][j] = Concat(Path[i][k],Path[k][j]);
-
-
-	for (int i = 1;i <= n;++i)
-		for (int j = 1;j <= n;++j) {
-			UniquePath[i][j] = Path[i][j];
-			sort(all(UniquePath[i][j]));
-			UniquePath[i][j].resize(unique(all(UniquePath[i][j])) - UniquePath[i][j].begin());
-		}
 
 	int Tmax;
 	cin>>Tmax;
@@ -76,18 +58,19 @@ int main(void) {
 	int last = 0;
 	int Vertex = 1;
 	vector < int > Answer;
+	//O(N * Tmax)
 	for (int i = 0;i < Tmax;) {
 		if (Vertex == 1) {
 			last = i;
 		}
-		/*  W.first represent some cost which we want to maximize, the bigger the cost,
+		/*	W.first represent some cost which we want to maximize, the bigger the cost,
 			the bigger is the potential reward. The costs are heuristically determined.
 			W.se will represent a vertex that will correspond to the Path we will follow
 			in the following steps.
 		*/
 		pair < db , int > W = make_pair(0,1);
 		for (int j = 1;j <= n;++j) {
-			/*  How many items can we take since the last time we visited vertex 1
+			/*	How many items can we take since the last time we visited vertex 1
 				We want this value to be as big as possible. On the other hand, if the
 				distance from current vertex `Vertex` to to vertex j is too big, then
 				it might not be profitable to go follow this path. The cost is set to
@@ -100,7 +83,7 @@ int main(void) {
 				continue;
 			smax(W,make_pair(f(Cnt1,Path[Vertex][j].size()),j));
 
-			/*  Another type of paths would be to go from `Vertex` to vertex 1, delivering
+			/*	Another type of paths would be to go from `Vertex` to vertex 1, delivering
 				all the items and then comming back to vertex j. To distinguish between these
 				two types of paths, W.se is set to -j in this case
 			*/
